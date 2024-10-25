@@ -1,0 +1,44 @@
+.port-config {
+    display:contents;
+    flex-direction:row;
+    align-items: flex-end; /* Alinear los elementos al lado derecho */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 300px;
+    position: fixed;
+    right: 20px; /* Espacio del borde derecho */
+    top: 50px;   /* Espacio del borde superior */
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .port-config label {
+    margin-bottom: 10px;
+    display: block;
+    text-align: right;
+  }
+  
+  .port-config input,
+  .port-config select {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .port-config button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .port-config button:hover {
+    background-color: #0056b3;
+  }
+  
