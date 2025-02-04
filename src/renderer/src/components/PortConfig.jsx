@@ -1,8 +1,9 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 import './PortConfig.css' // Importa el archivo CSS
 
 const PortConfig = ({ onConnect }) => {
-  const [port, setPort] = useState('')
+  const [port, setPort] = useState('COM3')
   const [baudRate, setBaudRate] = useState(9600)
 
   const baudRates = [9600, 14400, 19200, 38400, 57600, 115200]
@@ -43,6 +44,10 @@ const PortConfig = ({ onConnect }) => {
       <button onClick={handleConnect}>Conectar</button>
     </div>
   )
+}
+
+PortConfig.propTypes = {
+  onConnect: PropTypes.func.isRequired
 }
 
 export default PortConfig
