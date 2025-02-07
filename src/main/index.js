@@ -5,11 +5,13 @@ const path = require('node:path')
 const utils = require('@electron-toolkit/utils')
 const icon = path.join(__dirname, '../../resources/icon.png')
 const { SerialPort } = require('serialport')
+const { ReadlineParser } = require('@serialport/parser-readline')
 
 let connectPort = null
+let mainWindow
 
 function createWindow() {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1100,
     height: 670,
     show: false,
@@ -35,6 +37,14 @@ function createWindow() {
   return mainWindow
 }
 
+// // Handler para recibir datos del puerto serial
+// function handleSerialData(data) {
+//   const serializableData = data.toString().trim() // Asegúrate de que los datos son serializables
+//   console.log('Datos recibidos:', serializableData)
+//   // Enviar datos al renderer
+//   mainWindow.webContents.send('receive-data', serializableData)
+// }
+
 // Handler para conectarse al puerto serial
 ipcMain.on('connect-to-port', (event, portName, baudRate) => {
   if (connectPort) {
@@ -56,6 +66,33 @@ ipcMain.on('connect-to-port', (event, portName, baudRate) => {
   })
 
   connectPort.on('open', () => {
+    // Crear un parser para leer líneas completas (opcional, según el formato de datos)
+    const parser = connectPort.pipe(new ReadlineParser({ delimiter: '\n' }))
+
+    // Registrar el handler para recibir datos del puerto serial
+    parser.on('data', (line) => {
+      console.log('Datos recibidos del puerto:', line)
+
+      const outData = {
+        timestamp: new Date().toISOString(),
+        type: 'values',
+        data: line.trim().split(',').map(Number), // Convertir en array de números
+        raw: line.trim()
+      }
+
+      console.log('outData generado:', JSON.stringify(outData, null, 2))
+
+      try {
+        if (!mainWindow) {
+          console.error('Error: mainWindow no está definido')
+          return
+        }
+        mainWindow.webContents.send('receive-data', outData)
+      } catch (err) {
+        console.error('IpcMainEvent: error al enviar "receive-data"', err)
+      }
+    })
+
     console.log('Puerto serial abierto')
     // Cerrar el puerto después de un tiempo (por ejemplo, 5 segundos)
     setTimeout(() => {

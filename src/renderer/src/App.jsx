@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import RangeSlider from './components/RangeSlider' // Asegúrate de que la ruta sea correcta
 import PortConfig from './components/PortConfig'
 
-function App() {
+const App = () => {
   const [sliderValues, setSliderValues] = useState([45, 45, 45]) // Valores iniciales para los sliders
+  const [receivedData, setReceivedData] = useState('')
 
   const handleSliderChange = (index, newValue) => {
     const newSliderValues = [...sliderValues] // Crea una copia del arreglo
@@ -31,6 +32,18 @@ function App() {
     handleSendData(combinedValues)
   }, [combinedValues])
 
+  useEffect(() => {
+    // Suscribirse al evento de recibir datos
+    if (window.api && window.api.onReceiveData) {
+      window.api.onReceiveData((data) => {
+        console.log('Datos recibidos en el renderer:', data.data)
+        setReceivedData(data.data)
+      })
+    } else {
+      console.error('window.api.onReceiveData no está disponible')
+    }
+  }, []) // El array vacío asegura que el efecto solo se ejecute una vez al montar el componente
+
   return (
     <>
       {' '}
@@ -48,6 +61,16 @@ function App() {
         }}
       >
         TUMI ROBOT
+      </h3>
+      <h3
+        style={{
+          fontSize: '30px', // Tamaño de letra
+          paddingBottom: '10px', // Espacio alrededor del texto
+          fontWeight: 'bold', // Grosor de la letra (puedes usar 'normal', 'bold' o un número entre 100 y 900)
+          fontFamily: 'Arial, sans-serif' // Tipo de letra (puedes cambiar a cualquier fuente)
+        }}
+      >
+        Datos recibidos: {receivedData}
       </h3>
       <div className="container">
         <div>
