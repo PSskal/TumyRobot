@@ -12,7 +12,8 @@ const App = () => {
     setSliderValues(newSliderValues) // Actualiza el estado
   }
 
-  const combinedValues = sliderValues.join(',') // Combina los valores en una cadena
+  // Cambiar el formato de los valores combinados
+  const combinedValues = `${sliderValues[0]},${sliderValues[1]},${sliderValues[2]}`
 
   const handleConnect = (port, baudRate) => {
     if (window.api && window.api.connectToPort) {
@@ -23,8 +24,17 @@ const App = () => {
     }
   }
 
+  const handleDisconnect = () => {
+    if (window.api && window.api.disconnectPort) {
+      window.api.disconnectPort()
+      console.log('Desconectando del puerto')
+    } else {
+      console.error('window.api.disconnectPort no está disponible')
+    }
+  }
+
   const handleSendData = (data) => {
-    window.api.sendData(data) // Envía datos al Arduino
+    window.api.sendData(data) // Envía los datos al microcontrolador
   }
 
   useEffect(() => {
@@ -46,39 +56,38 @@ const App = () => {
 
   return (
     <>
-      {' '}
       <h3
         style={{
-          fontSize: '30px', // Tamaño de letra
-          paddingBottom: '10px', // Espacio alrededor del texto
-          fontWeight: 'bold', // Grosor de la letra (puedes usar 'normal', 'bold' o un número entre 100 y 900)
-          fontFamily: 'Arial, sans-serif', // Tipo de letra (puedes cambiar a cualquier fuente)
-          color: '#333', // Color del texto (puedes cambiar a cualquier color, hex, rgba, etc.)
-          letterSpacing: '4px', // Espaciado entre letras
-          textTransform: 'uppercase', // Convierte el texto a mayúsculas
-          borderBottom: '2px solid #00dbff', // Línea decorativa debajo del texto
-          textAlign: 'center' // Alineación del texto
+          fontSize: '30px',
+          paddingBottom: '10px',
+          fontWeight: 'bold',
+          fontFamily: 'Arial, sans-serif',
+          color: '#333',
+          letterSpacing: '4px',
+          textTransform: 'uppercase',
+          borderBottom: '2px solid #00dbff',
+          textAlign: 'center'
         }}
       >
         TUMI ROBOT
       </h3>
       <h3
         style={{
-          fontSize: '30px', // Tamaño de letra
-          paddingBottom: '10px', // Espacio alrededor del texto
-          fontWeight: 'bold', // Grosor de la letra (puedes usar 'normal', 'bold' o un número entre 100 y 900)
-          fontFamily: 'Arial, sans-serif' // Tipo de letra (puedes cambiar a cualquier fuente)
+          fontSize: '30px',
+          paddingBottom: '10px',
+          fontWeight: 'bold',
+          fontFamily: 'Arial, sans-serif'
         }}
       >
         Datos recibidos: {receivedData}
       </h3>
       <div className="container">
         <div>
-          <PortConfig onConnect={handleConnect} />
+          <PortConfig onConnect={handleConnect} onDisconnect={handleDisconnect} />
         </div>
         <div className="image-container">
           <img
-            src="./src/assets/robotsito2.png" // Reemplaza con la ruta de tu imagen
+            src="./src/assets/robotsito2.png"
             alt="Descripción de la imagen"
             className="version-image"
           />
@@ -87,22 +96,22 @@ const App = () => {
           <li>
             <RangeSlider
               nombre="JUNTA 1"
-              value={sliderValues[0]} // Pasar el valor correspondiente
-              onChange={(value) => handleSliderChange(0, value)} // Manejar el cambio
+              value={sliderValues[0]}
+              onChange={(value) => handleSliderChange(0, value)}
             />
           </li>
           <li>
             <RangeSlider
               nombre="JUNTA 2"
-              value={sliderValues[1]} // Pasar el valor correspondiente
-              onChange={(value) => handleSliderChange(1, value)} // Manejar el cambio
+              value={sliderValues[1]}
+              onChange={(value) => handleSliderChange(1, value)}
             />
           </li>
           <li>
             <RangeSlider
               nombre="JUNTA 3"
-              value={sliderValues[2]} // Pasar el valor correspondiente
-              onChange={(value) => handleSliderChange(2, value)} // Manejar el cambio
+              value={sliderValues[2]}
+              onChange={(value) => handleSliderChange(2, value)}
             />
           </li>
         </div>

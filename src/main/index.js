@@ -71,7 +71,7 @@ ipcMain.on('connect-to-port', (event, portName, baudRate) => {
 
     // Registrar el handler para recibir datos del puerto serial
     parser.on('data', (line) => {
-      console.log('Datos recibidos del puerto:', line)
+      console.log(line)
 
       const outData = {
         timestamp: new Date().toISOString(),
@@ -80,7 +80,7 @@ ipcMain.on('connect-to-port', (event, portName, baudRate) => {
         raw: line.trim()
       }
 
-      console.log('outData generado:', JSON.stringify(outData, null, 2))
+      //  console.log('outData generado:', JSON.stringify(outData, null, 2))
 
       try {
         if (!mainWindow) {
@@ -95,15 +95,15 @@ ipcMain.on('connect-to-port', (event, portName, baudRate) => {
 
     console.log('Puerto serial abierto')
     // Cerrar el puerto después de un tiempo (por ejemplo, 5 segundos)
-    setTimeout(() => {
-      console.log('Cerrando el puerto serial...')
-      connectPort.close((err) => {
-        if (err) {
-          return console.error('Error al cerrar el puerto:', err.message)
-        }
-        console.log('Puerto cerrado')
-      })
-    }, 10000) // Cambia el tiempo (en milisegundos) según sea necesario
+    // setTimeout(() => {
+    //   console.log('Cerrando el puerto serial...')
+    //   connectPort.close((err) => {
+    //     if (err) {
+    //       return console.error('Error al cerrar el puerto:', err.message)
+    //     }
+    //     console.log('Puerto cerrado')
+    //   })
+    // }, 10000) // Cambia el tiempo (en milisegundos) según sea necesario
   })
 
   connectPort.on('error', (err) => {
